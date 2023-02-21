@@ -1,51 +1,12 @@
 #include "stdlib.h"
 #include "time.h"
 
-
 #include <bits/stdc++.h>
 #include <algorithm>
 #include <string>
 #include <iostream>
 #include <vector>
 #include <unordered_map>
-
-// party position in parliament
-enum Position{
-        government_lead,
-        coalition_partner,
-        opposition
-    };
-    
-unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
-        a=a-b;  a=a-c;  a=a^(c >> 13);
-        b=b-c;  b=b-a;  b=b^(a << 8);
-        c=c-a;  c=c-b;  c=c^(b >> 13);
-        a=a-b;  a=a-c;  a=a^(c >> 12);
-        b=b-c;  b=b-a;  b=b^(a << 16);
-        c=c-a;  c=c-b;  c=c^(b >> 5);
-        a=a-b;  a=a-c;  a=a^(c >> 3);
-        b=b-c;  b=b-a;  b=b^(a << 10);
-        c=c-a;  c=c-b;  c=c^(b >> 15);
-        return c;
-    }
-
-// parent law
-class Law{
-    public:
-    std::string name;
-    Party *introduced_by;
-    // negative costs will put money to the treasury
-    int days_till_free;
-    Law(std::string name){
-        this->name=name;
-    }
-};
-
-// children of Law
-class TaxLaw : Law{
-    
-};
-
 
 class Ideology{
     public:
@@ -78,32 +39,25 @@ class Ideology{
     }
 };
 
-class Voter{
-    public:
-    bool voted;
-    Ideology *belief;
-
-    Voter();
-    Voter(Ideology *belief){
-        this->belief = belief;
+// party position in parliament
+enum Position{
+        government_lead,
+        coalition_partner,
+        opposition
+    };
+    
+unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
+        a=a-b;  a=a-c;  a=a^(c >> 13);
+        b=b-c;  b=b-a;  b=b^(a << 8);
+        c=c-a;  c=c-b;  c=c^(b >> 13);
+        a=a-b;  a=a-c;  a=a^(c >> 12);
+        b=b-c;  b=b-a;  b=b^(a << 16);
+        c=c-a;  c=c-b;  c=c^(b >> 5);
+        a=a-b;  a=a-c;  a=a^(c >> 3);
+        b=b-c;  b=b-a;  b=b^(a << 10);
+        c=c-a;  c=c-b;  c=c^(b >> 15);
+        return c;
     }
-    void show_belief(){
-        std::cout << "Voter: " << this->belief->name << "\n";
-    }
-};
-
-void show_attitudes(std::vector<Voter*> voters){
-    std::unordered_map<std::string, int> belief_tally;
-    for (auto & i : voters){
-        belief_tally[i->belief->name] ++;
-    }
-
-    std::cout << "BELIEFS\n";
-    for (auto& it : belief_tally) {
-        std::cout << it.first << ' ' << it.second << std::endl;
-    }
-}
-
 
 class Member{
     public:
@@ -130,7 +84,6 @@ class Party{
     Party(std::string name, Ideology *ideology, int member_amount){
         this->name = name;
         this->ideology = ideology;
-        this->members = members;
         make_members(member_amount);
     }
 
@@ -153,6 +106,39 @@ class Party{
         }
     }
 };
+
+class Voter{
+    public:
+    bool voted;
+    Ideology *belief;
+    Party *prev_voted;
+
+    Voter();
+    Voter(Ideology *belief){
+        this->belief = belief;
+    }
+    void show_belief(){
+        std::cout << "Voter: " << this->belief->name << "\n";
+    }
+
+    void vote(){
+
+    }
+};
+
+
+void show_attitudes(std::vector<Voter*> voters){
+    std::unordered_map<std::string, int> belief_tally;
+    for (auto & i : voters){
+        belief_tally[i->belief->name] ++;
+    }
+
+    std::cout << "BELIEFS\n";
+    for (auto& it : belief_tally) {
+        std::cout << it.first << ' ' << it.second << std::endl;
+    }
+}
+
 
 class Parliament{
     public:
@@ -200,19 +186,18 @@ class Parliament{
         }
     };   
     
-    void show_votes(){ 
-        std::cout << "VOTES\n";
+    void show_votes(float turnout){  
+        std::cout << "\nTURNOUT\n";
+        std::cout << turnout << "%\n";
+        std::cout << "\nVOTES\n";
         std::set<std::pair<std::string, int>, comp> S(this->tally.begin(), this->tally.end());
         for (auto& it : S) {
             std::cout << it.first << ' ' << it.second << std::endl;
         }
     }
 
-    // elections
-
     // removes empty parties with no members
-    void election_cleanup(){
-        
+    void election_cleanup(){        
         for (auto & i : this->parties){
             if (i->members.size() <= 0){
                 std::cout << i->name << " has been removed from the parliament!\n";
@@ -222,6 +207,7 @@ class Parliament{
 
     // adjust members based on their percentage of votes
     void parliament_shuffler(){
+        std::cout << "\nCHANGES\n";
         for(int i = 0 ; i < this->parties.size() ; i++){
             int count = 0;
             // for now just hard set the votes to the member count;
@@ -242,35 +228,48 @@ class Parliament{
                     count --;
                 }
             }
-
             std::cout << this->parties[i]->name << " changed by " << count << "\n";
         }
     }
 
     // main election runner
     void hold_election(std::vector<Voter*> voters, std::vector<Ideology*> ideologies){     
+        int turnout = 0;
+        float normal_chance=85.0;
+        float apath_chance = 30.0;
         set_tally();
         auto rng = std::default_random_engine {};
         std::shuffle(std::begin(this->parties), std::end(this->parties), rng);
         
         for(int i = 0; i < voters.size() ; i++){
+            // normal voters go here
             if (voters[i]->belief->name != "Apathy"){
-                for (int j = 0; j < this->parties.size() ; j++){ 
-                    if (this->parties[j]->ideology->name == voters[i]->belief->name){
-                        this->tally[this->parties[j]->name] ++;
-                        break;
-                    }   
+                float voted = rand() % 100;
+                if (voted < normal_chance){
+                    // find a party that matches
+                    for (int j = 0; j < this->parties.size() ; j++){ 
+                        if (this->parties[j]->ideology->name == voters[i]->belief->name){
+                            this->tally[this->parties[j]->name] ++;
+                            voters[i]->prev_voted = this->parties[j];
+                            turnout ++;
+                            break;
+                        }
+                    }
                 }
             }
-            
-            // apathetics will vote randomly
+
+            // apathetics will vote randomly or not at all
             else{
-                unsigned long seed = mix(clock(), time(NULL), getpid());
-                srand(seed);
-                this->tally[this->parties[rand() % (parties.size())]->name] ++;
+                float voted = rand() % 100;
+                if (voted < apath_chance){
+                    // voted
+                    this->tally[this->parties[rand() % (parties.size())]->name] ++;
+                    turnout ++;
+                }
             }
         }
-        show_votes();
+        float true_turnout = (turnout / (float)voters.size()) * 100;
+        show_votes(true_turnout);
         parliament_shuffler();
     }
 };

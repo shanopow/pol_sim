@@ -28,7 +28,6 @@ int main(){
         Voter *voter = new Voter(ideologies[picker]);
         voters.push_back(voter);
     }
-    show_attitudes(voters);
 
     // make parties
     Party *part1 = new Party("Whigs", ideo2, 46);
@@ -44,7 +43,7 @@ int main(){
     for(int day=0 ; day < 1 ; day++){
         parliament.show_parliament();
         if (parliament.day_till_election <= 0){
-            std::cout << "Election time!" << "\n\n";
+            std::cout << "Election time!" << "\n";
             parliament.hold_election(voters, ideologies);
         }
         parliament.day_till_election --;
