@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <unordered_map>
+#include <map>
 
 class Ideology{
     public:
@@ -111,7 +112,7 @@ class Voter{
     public:
     bool voted;
     Ideology *belief;
-    Party *prev_voted;
+    Party *prev_voted = NULL;
 
     Voter();
     Voter(Ideology *belief){
@@ -122,7 +123,7 @@ class Voter{
     }
 
     void vote(){
-
+        
     }
 };
 
@@ -139,13 +140,13 @@ void show_attitudes(std::vector<Voter*> voters){
     }
 }
 
-
 class Parliament{
     public:
     int seat_number;
     int day_till_election=0;
     bool in_session=false;
     Party * in_power;
+    
     std::vector<Party*> parties;
     std::unordered_map<std::string, int> tally;
 
@@ -197,7 +198,7 @@ class Parliament{
     }
 
     // removes empty parties with no members
-    void election_cleanup(){        
+    void election_cleanup(){ 
         for (auto & i : this->parties){
             if (i->members.size() <= 0){
                 std::cout << i->name << " has been removed from the parliament!\n";
@@ -235,26 +236,39 @@ class Parliament{
     // main election runner
     void hold_election(std::vector<Voter*> voters, std::vector<Ideology*> ideologies){     
         int turnout = 0;
-        float normal_chance=85.0;
+        // chances for voting for each type of person
+        float normal_chance = 85.0;
         float apath_chance = 30.0;
+        float loyalty_chance = 80.0;
+        float party_picker = 60.0;
         set_tally();
         auto rng = std::default_random_engine {};
         std::shuffle(std::begin(this->parties), std::end(this->parties), rng);
-        
         for(int i = 0; i < voters.size() ; i++){
             // normal voters go here
             if (voters[i]->belief->name != "Apathy"){
+                
                 float voted = rand() % 100;
                 if (voted < normal_chance){
-                    // find a party that matches
-                    for (int j = 0; j < this->parties.size() ; j++){ 
-                        if (this->parties[j]->ideology->name == voters[i]->belief->name){
-                            this->tally[this->parties[j]->name] ++;
-                            voters[i]->prev_voted = this->parties[j];
-                            turnout ++;
-                            break;
+                    float loyalty = rand() % 100;
+                    // votes for the party they voted for before
+                    if (loyalty < loyalty_chance && voters[i]->prev_voted != NULL){
+                        this->tally[voters[i]->prev_voted->name] ++;
+                    }
+                    
+                    // pick a party that matches their ideology to vote for, will try to choose the bigger parties with the most members first
+                    else{
+                        std::map<int, Party*> vote_choice;
+                        for (int j = 0; j < this->parties.size() ; j++){ 
+                            if (this->parties[j]->ideology->name == voters[i]->belief->name){
+                                vote_choice[this->parties.size()] = this->parties[j];
+                            }
+                            
+                                this->tally[this->parties[j]->name] ++;
+                                voters[i]->prev_voted = this->parties[j];
                         }
                     }
+                    turnout ++;
                 }
             }
 
