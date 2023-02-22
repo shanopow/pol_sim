@@ -17,8 +17,6 @@ int main(){
     Ideology *ideo3 = new Ideology("Socialism", 5,-4,5,3,0,0,4,4,-1);
     std::vector<Ideology*> ideologies = {ideo0, ideo1, ideo2, ideo3};
 
-    // make laws to choose from
-
     // make voter population
     std::vector<Voter*> voters = {};
     unsigned long seed = mix(clock(), time(NULL), getpid());

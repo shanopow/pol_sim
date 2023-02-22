@@ -232,6 +232,29 @@ class Parliament{
             std::cout << this->parties[i]->name << " changed by " << count << "\n";
         }
     }
+    void election_events(){
+        // chance of generating an election event
+        float election_event_chance = 75.0;
+
+        // tries to generate a random event for the election
+        while(election_event_chance > 0){
+            float event_happened = rand() % 100;
+            if (event_happened < election_event_chance){
+                
+                // choose the type of event to happen
+                // chances are distributed are 60% transfer, 40% loser
+                if ((rand() % 100) <= 60 ){
+                    // transfer event
+                    ElectionTransfer *transfer = new ElectionTransfer("A transfer has occured", 0, this->parties[rand() % (parties.size())], this->parties[rand() % (parties.size())], rand() % 5);
+                }
+                
+                else{
+                    // loser event 
+                    ElectionLoser *loser = new ElectionLoser("A party has lost some support among its voter base!", 0, this->parties[rand() % (parties.size())]);
+                }
+            }
+        }
+    }
 
     // main election runner
     void hold_election(std::vector<Voter*> voters, std::vector<Ideology*> ideologies){     
@@ -241,6 +264,7 @@ class Parliament{
         float apath_chance = 30.0;
         float loyalty_chance = 80.0;
         float party_picker = 60.0;
+        
         set_tally();
         auto rng = std::default_random_engine {};
         std::shuffle(std::begin(this->parties), std::end(this->parties), rng);
@@ -250,7 +274,6 @@ class Parliament{
             if (voters[i]->belief->name != "Apathy"){
                 float voted = rand() % 100;
                 if (voted < normal_chance){
-                    
                     float loyalty = rand() % 100;
                     // votes for the party they voted for before
                     if (loyalty < loyalty_chance && voters[i]->prev_voted != NULL){
@@ -289,9 +312,64 @@ class Parliament{
                 }
             }
         }
+        
         float true_turnout = (turnout / (float)voters.size()) * 100;
         show_votes(true_turnout);
         parliament_shuffler();
         this->day_till_election = 10;
+    }
+};
+
+// election related event to change votes for a faction
+// abstract parent class
+class ElectionEvent{
+    public:
+    std::string flavour;
+    int duration;
+    
+    virtual void SetFlavour(std::string flavour){
+        this->flavour = flavour;
+    }
+
+    virtual void SetDuration(int duration){
+        this->duration = duration;
+    }
+
+};
+
+// transfer from one party to another
+class ElectionTransfer : public ElectionEvent {
+    public:
+    Party* party_loser;
+    Party* party_winner;
+    int transfer_amount;
+    // constructor
+    ElectionTransfer(std::string flavour, int duration, Party* party_loser, Party* party_winner, int transfer_amount){
+        this->party_loser = party_loser;
+        this->party_winner = party_winner;
+        this->transfer_amount = transfer_amount;
+        
+        // inherited methods
+        SetFlavour(flavour);
+        SetDuration(duration);
+    }
+
+    void transfer(std::unordered_map<std::string, int> *tally){
+    }
+};
+
+// a party just loses votes, they are then redestributed to all other parties
+class ElectionLoser : public ElectionEvent {
+    public:
+    Party* party_loser;
+    // constructor
+    ElectionLoser(std::string flavour, int duration, Party* party_loser){
+        this->party_loser = party_loser;
+        // inherited methods
+        SetFlavour(flavour);
+        SetDuration(duration);
+    }
+
+    void loser(std::unordered_map<std::string, int> *tally){
     }
 };
