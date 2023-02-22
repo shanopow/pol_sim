@@ -40,7 +40,7 @@ int main(){
     Parliament parliament = Parliament(100, part1, parties);
 
     // day by day
-    for(int day=0 ; day < 1 ; day++){
+    for(int day=0 ; day < 30 ; day++){
         parliament.show_parliament();
         if (parliament.day_till_election <= 0){
             std::cout << "Election time!" << "\n";

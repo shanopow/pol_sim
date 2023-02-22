@@ -237,7 +237,7 @@ class Parliament{
     void hold_election(std::vector<Voter*> voters, std::vector<Ideology*> ideologies){     
         int turnout = 0;
         // chances for voting for each type of person
-        float normal_chance = 85.0;
+        float normal_chance = 90.0;
         float apath_chance = 30.0;
         float loyalty_chance = 80.0;
         float party_picker = 60.0;
@@ -245,30 +245,37 @@ class Parliament{
         auto rng = std::default_random_engine {};
         std::shuffle(std::begin(this->parties), std::end(this->parties), rng);
         for(int i = 0; i < voters.size() ; i++){
+            
             // normal voters go here
             if (voters[i]->belief->name != "Apathy"){
-                
                 float voted = rand() % 100;
                 if (voted < normal_chance){
+                    
                     float loyalty = rand() % 100;
                     // votes for the party they voted for before
                     if (loyalty < loyalty_chance && voters[i]->prev_voted != NULL){
+                        turnout ++;
                         this->tally[voters[i]->prev_voted->name] ++;
                     }
                     
-                    // pick a party that matches their ideology to vote for, will try to choose the bigger parties with the most members first
+                    // finds the parties that match their ideology to vote for, will try to choose the bigger parties with the most members first
                     else{
-                        std::map<int, Party*> vote_choice;
+                        std::map<int, Party*, std::greater<int>> vote_choice = {};
                         for (int j = 0; j < this->parties.size() ; j++){ 
                             if (this->parties[j]->ideology->name == voters[i]->belief->name){
-                                vote_choice[this->parties.size()] = this->parties[j];
+                                vote_choice[this->parties[j]->members.size()] = this->parties[j];
                             }
-                            
-                                this->tally[this->parties[j]->name] ++;
-                                voters[i]->prev_voted = this->parties[j];
+                        }
+                        for (auto const& x : vote_choice){
+                            float chose_party = rand() % 100;
+                            if (party_picker < chose_party){
+                                this->tally[x.second->name] ++;
+                                voters[i]->prev_voted = x.second;
+                                turnout ++;
+                                break;
+                            }
                         }
                     }
-                    turnout ++;
                 }
             }
 
@@ -285,5 +292,6 @@ class Parliament{
         float true_turnout = (turnout / (float)voters.size()) * 100;
         show_votes(true_turnout);
         parliament_shuffler();
+        this->day_till_election = 10;
     }
 };
