@@ -37,14 +37,16 @@ class ElectionTransfer : public ElectionEvent {
         std::cout << this->party_loser << " lost " << this->transfer_amount <<  " votes to " << this->party_winner << std::endl;
     }
     
-    void transfer(std::unordered_map<std::string, int> *tally){
-        // picks a random amount to move from loser to winner
+    // picks a random amount to move from loser to winner
+    std::unordered_map<std::string, int> transfer(std::unordered_map<std::string, int> tally){
         int picker = rand() % 3;
         if (picker <= 0){
             picker = 1;
         }
-        tally->at(party_loser) -= picker;
-        tally->at(party_winner) += picker;
+        std::cout << picker << "\n";
+        tally[party_loser] -= picker;
+        tally[party_winner] += picker;
+        return tally;
     }
 };
 
@@ -60,11 +62,23 @@ class ElectionLoser : public ElectionEvent {
         SetDuration(duration);
     }
 
-    void loser(std::unordered_map<std::string, int> *tally){
-        // reduces the votes for the party by a random amount, then distributes between other parites in the tally pool
+    // reduces the votes for the party by a random amount, then distributes between other parites in the tally pool
+    std::unordered_map<std::string, int> loser(std::unordered_map<std::string, int> tally){
+        int picker = rand() % 3;
+        if (picker <= 0){
+            picker = 1;
+        }
+        tally[party_loser] -= picker;
+        // send out the freed votes
+        while (picker > 0){
+            // pick random party in tally to give to
+            picker--;
+        }
+        return tally;
     }
 };
 
+// a party wins votes, they are taken form all other parties
 class ElectionWinner : public ElectionEvent {
     public:
     std::string party_winner;
@@ -77,13 +91,19 @@ class ElectionWinner : public ElectionEvent {
         SetDuration(duration);
     }
 
-    void winner(std::unordered_map<std::string, int> *tally){
+    // a random amount of votes are taken out of the tally pool and then given to a specific party
+    std::unordered_map<std::string, int> winner(std::unordered_map<std::string, int> tally){
         int picker = rand() % 3;
         if (picker <= 0){
             picker = 1;
         }
-        
-        // a random amount of votes are taken out of the tally pool and then given to a specific party
+        tally[party_winner] += picker;
+        // send out the freed votes
+        while (picker > 0){
+            // pick random party in tally to take from
+            picker--;
+        }
+        return tally;
     }
 };
 

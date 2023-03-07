@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <map>
 
+#include "election_events.cpp"
 class Ideology{
     public:
     // sensitivites range from -5 to 5, ints only
@@ -44,7 +45,7 @@ class Ideology{
 enum Position{
         government_lead,
         coalition_partner,
-        opposition
+        opposition,
     };
     
 unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
@@ -242,16 +243,32 @@ class Parliament{
             if (event_happened < election_event_chance){
                 
                 // choose the type of event to happen
-                // chances are distributed are 60% transfer, 40% loser
-                if ((rand() % 100) <= 60 ){
+                // chances are distributed are 40% transfer, 30% loser, 30% winner
+                int event_chooser = rand() % 100; 
+                show_votes(100);
+                if ((event_chooser) <= 40 ){
                     // transfer event
-                    ElectionTransfer *transfer = new ElectionTransfer("A transfer has occured", 0, this->parties[rand() % (parties.size())], this->parties[rand() % (parties.size())], rand() % 5);
+                    ElectionTransfer *event = new ElectionTransfer("A transfer has occured", 0, this->parties[rand() % (parties.size())]->name, this->parties[rand() % (parties.size())]->name);
+                    this->tally = event->transfer(this->tally);
                 }
                 
-                else{
-                    // loser event 
-                    ElectionLoser *loser = new ElectionLoser("A party has lost some support among its voter base!", 0, this->parties[rand() % (parties.size())]);
+                else if (event_chooser >= 70){
+                    // loser event
+                    ElectionLoser *event = new ElectionLoser("A party has lost some support among its voter base!", 0, this->parties[rand() % (parties.size())]->name);
+                    this->tally = event->loser(this->tally);
                 }
+                else{
+                    // winner event 
+                    ElectionWinner *event = new ElectionWinner("A party has won some support with other parties voters!", 0, this->parties[rand() % (parties.size())]->name);
+                    this->tally = event->winner(this->tally);
+                }
+                show_votes(100);
+                std::cout << "Made an event! REMOVE\n";
+                election_event_chance -= 10;
+            }
+            // event gen chance failed so give up
+            else{
+                break;
             }
         }
     }
@@ -314,62 +331,9 @@ class Parliament{
         }
         
         float true_turnout = (turnout / (float)voters.size()) * 100;
+        election_events();
         show_votes(true_turnout);
         parliament_shuffler();
         this->day_till_election = 10;
-    }
-};
-
-// election related event to change votes for a faction
-// abstract parent class
-class ElectionEvent{
-    public:
-    std::string flavour;
-    int duration;
-    
-    virtual void SetFlavour(std::string flavour){
-        this->flavour = flavour;
-    }
-
-    virtual void SetDuration(int duration){
-        this->duration = duration;
-    }
-
-};
-
-// transfer from one party to another
-class ElectionTransfer : public ElectionEvent {
-    public:
-    Party* party_loser;
-    Party* party_winner;
-    int transfer_amount;
-    // constructor
-    ElectionTransfer(std::string flavour, int duration, Party* party_loser, Party* party_winner, int transfer_amount){
-        this->party_loser = party_loser;
-        this->party_winner = party_winner;
-        this->transfer_amount = transfer_amount;
-        
-        // inherited methods
-        SetFlavour(flavour);
-        SetDuration(duration);
-    }
-
-    void transfer(std::unordered_map<std::string, int> *tally){
-    }
-};
-
-// a party just loses votes, they are then redestributed to all other parties
-class ElectionLoser : public ElectionEvent {
-    public:
-    Party* party_loser;
-    // constructor
-    ElectionLoser(std::string flavour, int duration, Party* party_loser){
-        this->party_loser = party_loser;
-        // inherited methods
-        SetFlavour(flavour);
-        SetDuration(duration);
-    }
-
-    void loser(std::unordered_map<std::string, int> *tally){
     }
 };
