@@ -222,7 +222,7 @@ class Parliament{
                     count ++;
                 }
             }
-            
+
             // downsize the party
             else if (this->parties[i]->members.size() > this->tally[this->parties[i]->name]){
                 while (this->parties[i]->members.size() > this->tally[this->parties[i]->name]){
@@ -329,7 +329,7 @@ class Parliament{
                 }
             }
         }
-        
+
         float true_turnout = (turnout / (float)voters.size()) * 100;
         election_events();
         show_votes(true_turnout);
