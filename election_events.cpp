@@ -35,14 +35,14 @@ class ElectionTransfer : public ElectionEvent {
     void FlavourShower(){
         std::cout << this->party_loser << " lost " << this->transfer_amount <<  " votes to " << this->party_winner << std::endl;
     }
-    
+
     // picks a random amount to move from loser to winner
     std::unordered_map<std::string, int> transfer(std::unordered_map<std::string, int> tally){
         int picker = rand() % 3;
         if (picker <= 0){
             picker = 1;
         }
-        std::cout << picker << "\n";
+        this->transfer_amount = picker;
         tally[party_loser] -= picker;
         tally[party_winner] += picker;
         return tally;

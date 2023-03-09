@@ -234,39 +234,40 @@ class Parliament{
             std::cout << this->parties[i]->name << " changed by " << count << "\n";
         }
     }
-    
+
     void election_events(){
         // chance of generating an election event
         float election_event_chance = 75.0;
         // tries to generate a random event for the election
         while(election_event_chance > 0){
+            // chance of the vent happening
             float event_happened = rand() % 100;
             if (event_happened < election_event_chance){
-                
-                ElectionTransfer *event = NULL;
                 // choose the type of event to happen
                 // chances are distributed are 40% transfer, 30% loser, 30% winner
-                int event_chooser = rand() % 100; 
+                int event_chooser = rand() % 100;
                 if ((event_chooser) <= 40 ){
                     // transfer event
                     ElectionTransfer *event = new ElectionTransfer("A transfer has occured", 0, this->parties[rand() % (parties.size())]->name, this->parties[rand() % (parties.size())]->name);
                     this->tally = event->transfer(this->tally);
+                    event->FlavourShower();
                 }
                 
                 else if (event_chooser >= 70){
                     // loser event
                     ElectionLoser *event = new ElectionLoser("A party has lost some support among its voter base!", 0, this->parties[rand() % (parties.size())]->name);
                     this->tally = event->loser(this->tally);
+                    event->FlavourShower();
                 }
                 else{
-                    // winner event 
+                    // winner event
                     ElectionWinner *event = new ElectionWinner("A party has won some support with other parties voters!", 0, this->parties[rand() % (parties.size())]->name);
                     this->tally = event->winner(this->tally);
+                    event->FlavourShower();
                 }
                 election_event_chance -= 10;
-                //if (event){
-                //    event->FlavourShower();
-                //}
+                // TODO
+                // our event is always null this is bad, likely because preded above event_chooser
             }
             // event gen chance failed so give up
             else{
