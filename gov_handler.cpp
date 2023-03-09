@@ -212,6 +212,7 @@ class Parliament{
         std::cout << "\nCHANGES\n";
         for(int i = 0 ; i < this->parties.size() ; i++){
             int count = 0;
+            // TODO
             // for now just hard set the votes to the member count;
             // check if less or more, then one by one add or delete members until satisfied
             
@@ -233,19 +234,19 @@ class Parliament{
             std::cout << this->parties[i]->name << " changed by " << count << "\n";
         }
     }
+    
     void election_events(){
         // chance of generating an election event
         float election_event_chance = 75.0;
-
         // tries to generate a random event for the election
         while(election_event_chance > 0){
             float event_happened = rand() % 100;
             if (event_happened < election_event_chance){
                 
+                ElectionTransfer *event = NULL;
                 // choose the type of event to happen
                 // chances are distributed are 40% transfer, 30% loser, 30% winner
                 int event_chooser = rand() % 100; 
-                show_votes(100);
                 if ((event_chooser) <= 40 ){
                     // transfer event
                     ElectionTransfer *event = new ElectionTransfer("A transfer has occured", 0, this->parties[rand() % (parties.size())]->name, this->parties[rand() % (parties.size())]->name);
@@ -262,9 +263,10 @@ class Parliament{
                     ElectionWinner *event = new ElectionWinner("A party has won some support with other parties voters!", 0, this->parties[rand() % (parties.size())]->name);
                     this->tally = event->winner(this->tally);
                 }
-                show_votes(100);
-                std::cout << "Made an event! REMOVE\n";
                 election_event_chance -= 10;
+                //if (event){
+                //    event->FlavourShower();
+                //}
             }
             // event gen chance failed so give up
             else{
@@ -297,7 +299,7 @@ class Parliament{
                         turnout ++;
                         this->tally[voters[i]->prev_voted->name] ++;
                     }
-                    
+
                     // finds the parties that match their ideology to vote for, will try to choose the bigger parties with the most members first
                     else{
                         std::map<int, Party*, std::greater<int>> vote_choice = {};
@@ -306,6 +308,7 @@ class Parliament{
                                 vote_choice[this->parties[j]->members.size()] = this->parties[j];
                             }
                         }
+
                         for (auto const& x : vote_choice){
                             float chose_party = rand() % 100;
                             if (party_picker < chose_party){
@@ -331,8 +334,8 @@ class Parliament{
         }
 
         float true_turnout = (turnout / (float)voters.size()) * 100;
-        election_events();
         show_votes(true_turnout);
+        election_events();
         parliament_shuffler();
         this->day_till_election = 10;
     }

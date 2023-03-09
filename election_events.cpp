@@ -15,7 +15,6 @@ class ElectionEvent{
     virtual void SetDuration(int duration){
         this->duration = duration;
     }
-
 };
 
 // transfer from one party to anothers
@@ -54,12 +53,17 @@ class ElectionTransfer : public ElectionEvent {
 class ElectionLoser : public ElectionEvent {
     public:
     std::string party_loser;
+    int loss_amount;
     // constructor
     ElectionLoser(std::string flavour, int duration, std::string party_loser){
         this->party_loser = party_loser;
         // inherited methods
         SetFlavour(flavour);
         SetDuration(duration);
+    }
+    
+    void FlavourShower(){
+        std::cout << this->party_loser << " lost " << this->loss_amount <<  " votes" << std::endl;
     }
 
     // reduces the votes for the party by a random amount, then distributes between other parites in the tally pool
@@ -68,6 +72,7 @@ class ElectionLoser : public ElectionEvent {
         if (picker <= 0){
             picker = 1;
         }
+        this->loss_amount = picker;
         tally[party_loser] -= picker;
         // send out the freed votes
         while (picker > 0){
@@ -82,13 +87,17 @@ class ElectionLoser : public ElectionEvent {
 class ElectionWinner : public ElectionEvent {
     public:
     std::string party_winner;
-    
+    int win_amount;
     //constructor
     ElectionWinner(std::string flavour, int duration, std::string party_winner){
         this->party_winner = party_winner;
         // inherited methods
         SetFlavour(flavour);
         SetDuration(duration);
+    }
+    
+    void FlavourShower(){
+        std::cout << this->party_winner << " won " << this->win_amount <<  " votes" << std::endl;
     }
 
     // a random amount of votes are taken out of the tally pool and then given to a specific party
@@ -97,6 +106,7 @@ class ElectionWinner : public ElectionEvent {
         if (picker <= 0){
             picker = 1;
         }
+        win_amount = picker;
         tally[party_winner] += picker;
         // send out the freed votes
         while (picker > 0){

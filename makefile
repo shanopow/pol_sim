@@ -8,3 +8,6 @@ $(obj):
 
 main: $(obj)
 	g++ -o $@ $^
+
+clean:
+	rm main *.o
