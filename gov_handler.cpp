@@ -10,6 +10,42 @@
 #include <map>
 
 #include "election_events.cpp"
+// NOT IMPLEMENTED
+/* maps of traits for members
+   members can gain or lose these traits based on triggers and events
+*/
+// inits empty, triats will be added based on curren parties
+std::unordered_map<std::string, std::string> voting_traits{};
+// each positive and negaitve should balance out for fairness
+std::unordered_map<std::string, int> loyalty_traits{
+    {"Disgruntled", -1},
+    {"Deluded", -2},
+    {"Scheming", -3},
+    {"Trusting", 1},
+    {"Gullible", 3},
+    {"Content", 2},
+    {"Devoted", 4},
+    {"Inciter", -4}
+};
+
+std::unordered_map<std::string, int> popularity_traits{
+    {"Media Personality", 2},
+    {"Local Hero", 1},
+    {"Fool", -1},
+    {"Orator", 2},
+    {"Agressive", -2},
+    {"Scandalous", -3},
+};
+
+std::unordered_map<std::string, int> competency_traits{
+    {"Old Guard", 1},
+    {"Green", -1},
+    {"Senile", -3},
+    {"Paper Pusher", 2},
+    {"Bureaucrat", 3},
+    {"Lazy", -1}
+};
+
 class Ideology{
     public:
     // sensitivites range from -5 to 5, ints only
@@ -64,14 +100,18 @@ unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
 class Member{
     public:
     // loyalty, popularity, competency range from 0-5
-    int loyalty=3;
-    int popularity=3;
-    int competency=3;
+    int loyalty;
+    int popularity;
+    int competency;
     std::string name;
     int age=0;
     Member();
     Member(std::string name){
         this->name = name;
+    }
+    void SetTraits(){
+
+
     }
 };
 
@@ -90,7 +130,6 @@ class Party{
     }
 
     void make_members(int member_amount){
-        srand(time(0));
         std::vector <std::string> first_name = {"John", "Mary", "Peter", "Steve", "Michael", "Jane", "Shane", "Angela", "Niall", "Cathal", "Leo", "Anne", "Julie", "Michelle" };
         std::vector <std::string> second_name = {"Power", "Costello", "Humphrys", "Kelly", "Brown", "Cooper", "Stack", "Small", "Grande", "Martin", "Schwab", "Obama", "Dowling"};
 
@@ -179,8 +218,7 @@ class Parliament{
         template <typename T>
  
         // Comparator function
-        bool operator()(const T& l, const T& r) const
-        {
+        bool operator()(const T& l, const T& r) const{
             if (l.second != r.second) {
                 return l.second > r.second;
             }
