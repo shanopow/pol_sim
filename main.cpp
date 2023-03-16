@@ -28,17 +28,17 @@ int main(){
     }
 
     // make parties
-    Party *part1 = new Party("Whigs", ideo2, 46);
-    Party *part2 = new Party("Tories", ideo1, 32);
+    Party *part1 = new Party("Whigs", ideo2, 36);
+    Party *part2 = new Party("Tories", ideo1, 22);
     Party *part3 = new Party("Workers Party", ideo3, 4);
     Party *part4 = new Party("Meme Party", ideo1, 2);
     Party *part5 = new Party("Solidarity Party",ideo3, 16);
     std::vector<Party*> parties = {part1, part2, part3, part4, part5};
 
-    Parliament parliament = Parliament(100, part1, parties);
+    Parliament parliament = Parliament(80, part1, parties);
 
     // day by day
-    for(int day=0 ; day < 1 ; day++){
+    for(int day=0 ; day < 2 ; day++){
         parliament.show_parliament();
         if (parliament.day_till_election <= 0){
             std::cout << "Election time!" << "\n";

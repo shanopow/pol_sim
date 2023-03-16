@@ -2,6 +2,7 @@
 #include "time.h"
 
 #include <bits/stdc++.h>
+#include <math.h>
 #include <algorithm>
 #include <string>
 #include <iostream>
@@ -155,6 +156,7 @@ class Voter{
     Party *prev_voted = NULL;
 
     Voter();
+    
     Voter(Ideology *belief){
         this->belief = belief;
     }
@@ -246,33 +248,48 @@ class Parliament{
     }
 
     // adjust members based on their percentage of votes
-    void parliament_shuffler(){
+    void parliament_shuffler(int turnout){
         std::cout << "\nCHANGES\n";
+        float vote_leftovers = 0;
         for(int i = 0 ; i < this->parties.size() ; i++){
             int count = 0;
-            // TODO
-            // for now just hard set the votes to the member count;
-            // check if less or more, then one by one add or delete members until satisfied
+            // get vote share and seat share of the party
+            float vote_share = (float(this->tally[this->parties[i]->name]) / float(turnout));
+            float seat_share = (float(this->parties[i]->members.size()) / float(this->seat_number));
             
+            // how many seats they need to reach
+            float vote_target = (vote_share * this->seat_number);
+            // round down, add remainder to leftovers for later
+            float new_target = floor(vote_target);
+            vote_leftovers += (vote_target - new_target);
+            
+            // the adjust their seats until it reflects this percentage
             // upsize the party
-            if (this->parties[i]->members.size() < this->tally[this->parties[i]->name]){
-                while (this->parties[i]->members.size() < this->tally[this->parties[i]->name]){
+            if (seat_share < vote_share){
+                while (this->parties[i]->members.size() < new_target){
                     this->parties[i]->make_members(1);
                     count ++;
                 }
             }
 
             // downsize the party
-            else if (this->parties[i]->members.size() > this->tally[this->parties[i]->name]){
-                while (this->parties[i]->members.size() > this->tally[this->parties[i]->name]){
+            else if (seat_share > vote_share){
+                while (this->parties[i]->members.size() > new_target){
                     this->parties[i]->members.pop_back();
                     count --;
                 }
-            }
+            }            
             std::cout << this->parties[i]->name << " changed by " << count << "\n";
         }
+        
+        // leftover seats given to random parties
+        while (vote_leftovers > 0){
+            int random = rand() % this->parties.size();
+            this->parties[random]->make_members(1);
+            vote_leftovers --;
+        }
     }
-
+    // generates events during an election
     void election_events(){
         // chance of generating an election event
         float election_event_chance = 75.0;
@@ -374,8 +391,8 @@ class Parliament{
 
         float true_turnout = (turnout / (float)voters.size()) * 100;
         show_votes(true_turnout);
-        election_events();
-        parliament_shuffler();
+        //election_events();
+        parliament_shuffler(turnout);
         this->day_till_election = 10;
     }
 };
