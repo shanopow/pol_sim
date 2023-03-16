@@ -15,37 +15,6 @@
 /* maps of traits for members
    members can gain or lose these traits based on triggers and events
 */
-// inits empty, triats will be added based on curren parties
-std::unordered_map<std::string, std::string> voting_traits{};
-// each positive and negaitve should balance out for fairness
-std::unordered_map<std::string, int> loyalty_traits{
-    {"Disgruntled", -1},
-    {"Deluded", -2},
-    {"Scheming", -3},
-    {"Trusting", 1},
-    {"Gullible", 3},
-    {"Content", 2},
-    {"Devoted", 4},
-    {"Inciter", -4}
-};
-
-std::unordered_map<std::string, int> popularity_traits{
-    {"Media Personality", 2},
-    {"Local Hero", 1},
-    {"Fool", -1},
-    {"Orator", 2},
-    {"Agressive", -2},
-    {"Scandalous", -3},
-};
-
-std::unordered_map<std::string, int> competency_traits{
-    {"Old Guard", 1},
-    {"Green", -1},
-    {"Senile", -3},
-    {"Paper Pusher", 2},
-    {"Bureaucrat", 3},
-    {"Lazy", -1}
-};
 
 class Ideology{
     public:
@@ -98,6 +67,7 @@ unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
         return c;
     }
 
+
 class Member{
     public:
     // loyalty, popularity, competency range from 0-5
@@ -110,8 +80,14 @@ class Member{
     Member(std::string name){
         this->name = name;
     }
-    void SetTraits(){
-
+    void SetTraits(std::vector<std::unordered_map<std::string, int>> general_traits){
+        // go to each map, and take rand amount of traits to apply
+        for (auto section : general_traits) {
+            int section_amount = rand() & section.size();
+            while (section_amount > 0){
+                
+            }
+        }
 
     }
 };
