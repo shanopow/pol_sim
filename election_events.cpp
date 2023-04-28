@@ -1,5 +1,7 @@
 #include <string>
 #include <unordered_map>
+#include <iostream>
+#include <ostream>
 
 // election related event to change votes for a faction
 // abstract parent class

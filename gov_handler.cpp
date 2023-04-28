@@ -10,11 +10,42 @@
 #include <unordered_map>
 #include <map>
 
-#include "election_events.cpp"
-// NOT IMPLEMENTED
-/* maps of traits for members
-   members can gain or lose these traits based on triggers and events
-*/
+#include "election_events.hpp"
+
+// traits are used by members
+class Trait{
+    public:
+    
+    std::string desc;
+    int magnitude; // how much this changes
+    std::string style; // which style of trait this is;
+    int cost; // how many points it costs to take this trait
+
+    // constructor
+    Trait(std::string desc, int magnitude, std::string style, int cost){
+        setDesc(desc);
+        setMagnitude(magnitude);
+        setStyle(style);
+        setCost(cost);    
+    }
+    
+    //setters
+    void setDesc(std::string desc){
+        this->desc = desc;
+    }
+
+    void setMagnitude(int magnitude){
+        this->magnitude;
+    }
+
+    void setStyle(std::string style){
+        this->style = style;
+    }
+
+    void setCost(int cost){
+        this->cost = cost;
+    }
+};
 
 class Ideology{
     public:
@@ -53,7 +84,8 @@ enum Position{
         coalition_partner,
         opposition,
     };
-    
+
+// generic rand scrambler (for seeding)
 unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
         a=a-b;  a=a-c;  a=a^(c >> 13);
         b=b-c;  b=b-a;  b=b^(a << 8);
@@ -76,17 +108,18 @@ class Member{
     int competency;
     std::string name;
     int age=0;
-    Member();
+
+    //static storage for all of the traits in the games
+    std::vector<Trait> general_traits;
+    // this empty constructor should be removed
     Member(std::string name){
         this->name = name;
+        //setTraits(general_traits);
     }
-    void SetTraits(std::vector<std::unordered_map<std::string, int>> general_traits){
+
+    void setTraits(){
         // go to each map, and take rand amount of traits to apply
         for (auto section : general_traits) {
-            int section_amount = rand() & section.size();
-            while (section_amount > 0){
-                
-            }
         }
 
     }
@@ -99,7 +132,6 @@ class Party{
     Ideology *ideology;  
     Position position = opposition;
 
-    Party();
     Party(std::string name, Ideology *ideology, int member_amount){
         this->name = name;
         this->ideology = ideology;
@@ -130,9 +162,6 @@ class Voter{
     bool voted;
     Ideology *belief;
     Party *prev_voted = NULL;
-
-    Voter();
-    
     Voter(Ideology *belief){
         this->belief = belief;
     }
@@ -141,22 +170,20 @@ class Voter{
     }
 
     void vote(){
-        
+    }
+
+    void show_attitudes(std::vector<Voter*> voters){
+        std::unordered_map<std::string, int> belief_tally;
+        for (auto & i : voters){
+            belief_tally[i->belief->name] ++;
+        }
+
+        std::cout << "BELIEFS\n";
+        for (auto& it : belief_tally) {
+            std::cout << it.first << ' ' << it.second << std::endl;
+        }
     }
 };
-
-
-void show_attitudes(std::vector<Voter*> voters){
-    std::unordered_map<std::string, int> belief_tally;
-    for (auto & i : voters){
-        belief_tally[i->belief->name] ++;
-    }
-
-    std::cout << "BELIEFS\n";
-    for (auto& it : belief_tally) {
-        std::cout << it.first << ' ' << it.second << std::endl;
-    }
-}
 
 class Parliament{
     public:

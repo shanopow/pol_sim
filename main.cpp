@@ -1,4 +1,4 @@
-#include "gov_handler.cpp"
+#include "gov_handler.hpp"
 
 #include "stdlib.h"
 #include "time.h"
@@ -70,13 +70,14 @@ int main(){
         {"Bureaucrat", 3},
         {"Lazy", -1}
     };
+    
     // dump them onto the vector
     general_traits.push_back(loyalty_traits);
     general_traits.push_back(popularity_traits);
     general_traits.push_back(competency_traits);
     
     // day by day
-    for(int day=0 ; day < 2 ; day++){
+    for(int day=0; day < 2; day++){
         parliament.show_parliament();
         if (parliament.day_till_election <= 0){
             std::cout << "Election time!" << "\n";
