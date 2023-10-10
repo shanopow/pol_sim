@@ -1,4 +1,5 @@
 build:
+	make wclean
 	g++ -c election_events.cpp -o bin/election_events.o
 	g++ -c people.cpp -o bin/people.o
 	g++ -c file_reader.cpp -o bin/file_reader.o

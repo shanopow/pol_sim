@@ -156,6 +156,7 @@ void Parliament::parliament_shuffler(int turnout){
         
         // how many seats they need to reach
         float vote_target = (vote_share * this->seat_number);
+        
         // round down, add remainder to leftovers for later
         float new_target = floor(vote_target);
         vote_leftovers += (vote_target - new_target);
@@ -180,7 +181,8 @@ void Parliament::parliament_shuffler(int turnout){
     }
     
     // leftover seats given to random parties
-    while (vote_leftovers > 0){
+    while (vote_leftovers >= 0){
+        std::cout << vote_leftovers << "\n";
         int random = rand() % this->parties.size();
         this->parties[random]->make_members(1);
         vote_leftovers --;
@@ -190,6 +192,7 @@ void Parliament::parliament_shuffler(int turnout){
 void Parliament::election_events(){
     // chance of generating an election event
     float election_event_chance = 75.0;
+    
     // tries to generate a random event for the election
     while(election_event_chance > 0){
         // chance of the vent happening
