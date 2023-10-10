@@ -5,6 +5,9 @@ build:
 	g++ -c main.cpp -o bin/main.o
 	g++ bin/election_events.o  bin/people.o bin/gov_handler.o bin/main.o -o bin/program.exe
 
-clean:
+wclean:
 	rmdir /s /q bin
 	mkdir bin
+
+lclean:
+	rm -r bin/*

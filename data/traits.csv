@@ -1,0 +1,21 @@
+Style,Name,Magnitude,Cost
+Loyalty,Disgruntled,-1
+Loyalty,Deluded,-2
+Loyalty,Scheming,-3
+Loyalty,Trusting,1
+Loyalty,Gullible,3
+Loyalty,Content,2
+Loyalty,Devoted,4
+Loyalty,Inciter,-4
+Popularity,Media Personality,2
+Popularity,Local Hero,1
+Popularity,Fool,-1
+Popularity,Orator,2
+Popularity,Aggressive,-2
+Popularity,Scandalous,-3
+Competency,Old Guard,1
+Competency,Green,-1
+Competency,Senile,-3
+Competency,Paper Pusher,2
+Competency,Bureaucrat,3
+Competency,Lazy,-1
