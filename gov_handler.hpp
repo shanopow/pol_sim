@@ -1,26 +1,17 @@
+#ifndef GOVHANDLER_HPP
+#define GOVHANDLER_HPP
+
 #include <bits/stdc++.h>
 #include <math.h>
 #include <algorithm>
 #include <string>
 #include <iostream>
+
 #include <vector>
 #include <unordered_map>
 #include <map>
 
-class Trait{
-    public:
-    std::string desc;
-    int magnitude;
-    std::string style;
-    int cost;
-
-    Trait(std::string desc, int magnitude, std::string style, int cost);
-
-    void setDesc(std::string desc);
-    void setMagnitude(int magnitude);
-    void setStyle(std::string style);
-    void setCost(int cost);
-};
+#include "people.hpp"
 
 class Ideology{
     public:
@@ -46,20 +37,6 @@ enum Position{
 };
 
 unsigned long mix(unsigned long a, unsigned long b, unsigned long c);
-
-class Member{
-    public:
-    int loyalty;
-    int popularity;
-    int competency;
-    std::string name;
-    int age=0;
-
-    std::vector<Trait> general_traits;
-    Member(std::string name);
-
-    void setTraits();
-};
 
 class Party{
     public:
@@ -102,3 +79,5 @@ class Parliament{
     void election_events();
     void hold_election(std::vector<Voter*> voters, std::vector<Ideology*> ideologies);
 };
+
+#endif 

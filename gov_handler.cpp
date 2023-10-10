@@ -12,31 +12,7 @@
 
 #include "gov_handler.hpp"
 #include "election_events.hpp"
-
-// traits are used by members
-Trait::Trait(std::string desc, int magnitude, std::string style, int cost){
-    setDesc(desc);
-    setMagnitude(magnitude);
-    setStyle(style);
-    setCost(cost);    
-}
-
-//setters
-void Trait::setDesc(std::string desc){
-    this->desc = desc;
-}
-
-void Trait::setMagnitude(int magnitude){
-    this->magnitude;
-}
-
-void Trait::setStyle(std::string style){
-    this->style = style;
-}
-
-void Trait::setCost(int cost){
-    this->cost = cost;
-}
+#include "people.hpp"
 
 Ideology::Ideology(std::string name, int sens_progress, int sens_religion, int sens_equality, int sens_centralise, int sens_assimilation, int sens_military, int sens_democracy, int sens_globalist, int sens_security){
     this->name = name;
@@ -63,19 +39,6 @@ unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
     b=b-c;  b=b-a;  b=b^(a << 10);
     c=c-a;  c=c-b;  c=c^(b >> 15);
     return c;
-}
-
-
-Member::Member(std::string name){
-    this->name = name;
-    //setTraits(general_traits);
-}
-
-void Member::setTraits(){
-    // go to each map, and take rand amount of traits to apply
-    for (auto section : general_traits) {
-    }
-
 }
 
 Party::Party(std::string name, Ideology *ideology, int member_amount){
