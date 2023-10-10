@@ -109,7 +109,7 @@ void Parliament::show_parliament(){
     std::cout << "PARLIAMENT:" << "\n";
     for(int i = 0 ; i < parties.size() ; i++){
         std::cout << parties[i]->name;
-        std::cout << " members: " << parties[i]->members.size() << "\n";
+        std::cout << " members: " << parties[i]->members.size() << " (" << parties[i]->last_result << ") " << "\n";
     }
 }
 
@@ -146,10 +146,12 @@ void Parliament::election_cleanup(){
 
 // adjust members based on their percentage of votes
 void Parliament::parliament_shuffler(int turnout){
-    std::cout << "\nCHANGES\n";
-    float vote_leftovers = 0;
+    int taken_seats = 0;
+    int leftover_seats = 0;
+
     for(int i = 0 ; i < this->parties.size() ; i++){
         int count = 0;
+        
         // get vote share and seat share of the party
         float vote_share = (float(this->tally[this->parties[i]->name]) / float(turnout));
         float seat_share = (float(this->parties[i]->members.size()) / float(this->seat_number));
@@ -157,9 +159,8 @@ void Parliament::parliament_shuffler(int turnout){
         // how many seats they need to reach
         float vote_target = (vote_share * this->seat_number);
         
-        // round down, add remainder to leftovers for later
+        // round down to solid number
         float new_target = floor(vote_target);
-        vote_leftovers += (vote_target - new_target);
         
         // the adjust their seats until it reflects this percentage
         // upsize the party
@@ -176,16 +177,19 @@ void Parliament::parliament_shuffler(int turnout){
                 this->parties[i]->members.pop_back();
                 count --;
             }
-        }            
-        std::cout << this->parties[i]->name << " changed by " << count << "\n";
+        }
+        // update the taken seats and add to the parties last result
+        taken_seats += this->parties[i]->members.size();
+        this->parties[i]->last_result = count;
     }
     
     // leftover seats given to random parties
-    while (vote_leftovers >= 0){
-        std::cout << vote_leftovers << "\n";
+    leftover_seats = this->seat_number - taken_seats;
+    while (leftover_seats > 0){
         int random = rand() % this->parties.size();
         this->parties[random]->make_members(1);
-        vote_leftovers --;
+        this->parties[random]->last_result ++;
+        leftover_seats --;
     }
 }
 // generates events during an election

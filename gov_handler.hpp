@@ -44,6 +44,7 @@ class Party{
     std::vector<Member*> members;
     Ideology *ideology;  
     Position position = opposition;
+    int last_result=0;
 
     Party(std::string name, Ideology *ideology, int member_amount);
     void make_members(int member_amount);
