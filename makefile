@@ -1,6 +1,10 @@
 build:
-	g++ -c election_events.cpp -o election_events.o
-	g++ -c people.cpp -o people.o
-	g++ -c gov_handler.cpp -o gov_handler.o
-	g++ -c main.cpp -o main.o
-	g++ election_events.o  people.o gov_handler.o main.o -o program.exe
+	g++ -c election_events.cpp -o bin/election_events.o
+	g++ -c people.cpp -o bin/people.o
+	g++ -c gov_handler.cpp -o bin/gov_handler.o
+	g++ -c main.cpp -o bin/main.o
+	g++ bin/election_events.o  bin/people.o bin/gov_handler.o bin/main.o -o bin/program.exe
+
+clean:
+	rmdir /s /q bin
+	mkdir bin
