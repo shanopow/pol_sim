@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 #include "gov_handler.hpp"
+#include "file_reader.hpp"
 
 // main
 int main(){
@@ -27,6 +28,9 @@ int main(){
         Voter *voter = new Voter(ideologies[picker]);
         voters.push_back(voter);
     }
+
+    // create trait objects
+    
 
     // make parties
     Party *part1 = new Party("Whigs", ideo2, 36);
