@@ -27,10 +27,10 @@ void FileReader::ReadIn(){
             SentSplit(line, delimiter);   
         }
         fin.close();
-    } 
+    }
 
     else {
-        std::cout << "Unable to open file";
+        std::cout << "Unable to open file" << "\n";
     }
 }
 
@@ -44,15 +44,4 @@ void FileReader::SentSplit(std::string line, char delimiter){
         delim_line.push_back(word);
     }
     this->total_lines.push_back(delim_line);
-}
-
-int main(){
-    FileReader *filer = new FileReader("data/traits.csv");
-    filer->ReadIn();
-
-    for (const auto &innerVec : filer->total_lines) { 
-        for (const auto &element : innerVec) 
-            std::cout << element << ","; 
-        std::cout << std::endl; 
-    } 
 }

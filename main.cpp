@@ -9,6 +9,9 @@
 
 #include "gov_handler.hpp"
 #include "file_reader.hpp"
+#include "people.hpp"
+
+FileReader *filer = new FileReader("../data/traits.csv");
 
 // main
 int main(){
@@ -30,7 +33,8 @@ int main(){
     }
 
     // create trait objects
-    
+    filer->ReadIn();
+    TraitMaker(filer->total_lines);
 
     // make parties
     Party *part1 = new Party("Whigs", ideo2, 36);

@@ -3,6 +3,9 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
+
+void TraitMaker(std::vector<std::vector<std::string>> delim_traits);
 
 class Trait{
     public:
@@ -11,12 +14,11 @@ class Trait{
     std::string style;
     int cost;
 
-    Trait(std::string desc, int magnitude, std::string style, int cost);
+    Trait(std::string style, std::string desc, int magnitude);
 
     void setDesc(std::string desc);
     void setMagnitude(int magnitude);
     void setStyle(std::string style);
-    void setCost(int cost);
 };
 
 class Member{
