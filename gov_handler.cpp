@@ -41,9 +41,9 @@ unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
     return c;
 }
 
-Party::Party(std::string name, Ideology *ideology, int member_amount){
+Party::Party(std::string name, Ideology *main_ideology, int member_amount){
     this->name = name;
-    this->ideology = ideology;
+    this->main_ideology = main_ideology;
     make_members(member_amount);
 }
 
@@ -264,7 +264,7 @@ void Parliament::hold_election(std::vector<Voter*> voters, std::vector<Ideology*
                 else{
                     std::map<int, Party*, std::greater<int>> vote_choice = {};
                     for (int j = 0; j < this->parties.size() ; j++){ 
-                        if (this->parties[j]->ideology->name == voters[i]->belief->name){
+                        if (this->parties[j]->main_ideology->name == voters[i]->belief->name){
                             vote_choice[this->parties[j]->members.size()] = this->parties[j];
                         }
                     }

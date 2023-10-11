@@ -42,11 +42,11 @@ class Party{
     public:
     std::string name;
     std::vector<Member*> members;
-    Ideology *ideology;  
+    Ideology *main_ideology;  
     Position position = opposition;
     int last_result=0;
 
-    Party(std::string name, Ideology *ideology, int member_amount);
+    Party(std::string name, Ideology *main_ideology, int member_amount);
     void make_members(int member_amount);
     void show_members();
 };
