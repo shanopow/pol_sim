@@ -1,31 +1,6 @@
-#include "stdlib.h"
-#include "time.h"
-
-#include <bits/stdc++.h>
-#include <math.h>
-#include <algorithm>
-#include <string>
-#include <iostream>
-#include <vector>
-#include <unordered_map>
-#include <map>
-
 #include "gov_handler.hpp"
 #include "election_events.hpp"
 #include "people.hpp"
-
-Ideology::Ideology(std::string name, int sens_progress, int sens_religion, int sens_equality, int sens_centralise, int sens_assimilation, int sens_military, int sens_democracy, int sens_globalist, int sens_security){
-    this->name = name;
-    this->sens_progress = sens_progress;
-    this->sens_religion = sens_religion;
-    this->sens_equality = sens_equality;
-    this->sens_centralise = sens_centralise;
-    this->sens_assimilation = sens_assimilation;
-    this->sens_military = sens_military;
-    this->sens_democracy = sens_democracy;
-    this->sens_globalist = sens_globalist;
-    this->sens_security = sens_security;
-}
 
 // generic rand scrambler (for seeding)
 unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
@@ -40,54 +15,6 @@ unsigned long mix(unsigned long a, unsigned long b, unsigned long c){
     c=c-a;  c=c-b;  c=c^(b >> 15);
     return c;
 }
-
-Party::Party(std::string name, Ideology *main_ideology, int member_amount){
-    this->name = name;
-    this->main_ideology = main_ideology;
-    make_members(member_amount);
-}
-
-void Party::make_members(int member_amount){
-    std::vector <std::string> first_name = {"John", "Mary", "Peter", "Steve", "Michael", "Jane", "Shane", "Angela", "Niall", "Cathal", "Leo", "Anne", "Julie", "Michelle" };
-    std::vector <std::string> second_name = {"Power", "Costello", "Humphrys", "Kelly", "Brown", "Cooper", "Stack", "Small", "Grande", "Martin", "Schwab", "Obama", "Dowling"};
-
-    for (int i=0; i < member_amount ; i++){
-        std::string picker1 = first_name[rand() % (first_name.size() - 1)];
-        std::string picker2 = second_name[rand() % (second_name.size() - 1)];
-        Member * member = new Member(picker1 + " " + picker2);
-        this->members.push_back(member);
-    }
-}
-
-void Party::show_members(){
-    for (int i=0; i < this->members.size(); i++){
-        std::cout << this->members[i]->name << "\n"; 
-    }
-}
-
-Voter::Voter(Ideology *belief){
-    this->belief = belief;
-}
-
-void Voter::show_belief(){
-    std::cout << "Voter: " << this->belief->name << "\n";
-}
-
-void Voter::vote(){
-}
-
-void Voter::show_attitudes(std::vector<Voter*> voters){
-    std::unordered_map<std::string, int> belief_tally;
-    for (auto & i : voters){
-        belief_tally[i->belief->name] ++;
-    }
-
-    std::cout << "BELIEFS\n";
-    for (auto& it : belief_tally) {
-        std::cout << it.first << ' ' << it.second << std::endl;
-    }
-}
-
 
 Parliament::Parliament(int seat_number, Party *in_power, std::vector<Party*> parties){
     this->seat_number=seat_number;

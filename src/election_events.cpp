@@ -1,8 +1,3 @@
-#include <string>
-#include <unordered_map>
-#include <iostream>
-#include <ostream>
-
 #include "election_events.hpp"
 
 //Election Events

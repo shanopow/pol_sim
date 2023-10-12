@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <unordered_map>
 
+#include "ideology.hpp"
 void TraitMaker(std::vector<std::vector<std::string>> delim_traits);
 
 class Trait{
@@ -33,6 +35,17 @@ class Member{
     Member(std::string name);
 
     //void setTraits();
+};
+
+class Voter{
+    public:
+    bool voted;
+    Ideology *belief;
+    Party *prev_voted = NULL;
+    Voter(Ideology *belief);
+    void show_belief();
+    void vote();
+    void show_attitudes(std::vector<Voter*> voters);
 };
 
 #endif

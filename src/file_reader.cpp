@@ -1,8 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <vector>
-
 #include "file_reader.hpp"
 
 FileReader::FileReader(std::string filename){
