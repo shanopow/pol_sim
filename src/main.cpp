@@ -1,9 +1,10 @@
-#include "gov_handler.hpp"
 #include "file_reader.hpp"
-#include "people.hpp"
+#include "classlist/parliament.hpp"
+
+#include <unistd.h>
+#include "time.h"
 
 FileReader *filer = new FileReader("../data/traits.csv");
-
 // main
 int main(){
     // make ideologies

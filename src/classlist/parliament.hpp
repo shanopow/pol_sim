@@ -1,20 +1,18 @@
-#ifndef GOVHANDLER_HPP
-#define GOVHANDLER_HPP
+#ifndef PARLIAMENT_HPP
+#define PARLIAMENT_HPP
 
-#include <bits/stdc++.h>
-#include <math.h>
-#include <algorithm>
-#include <string>
-#include <iostream>
-
-#include <vector>
-#include <unordered_map>
+#include "party.hpp"
+#include "voter.hpp"
+#include "election_events.hpp"
+#include <set>
+#include <random>
 #include <map>
-
-#include "people.hpp"
+#include <algorithm>
 
 unsigned long mix(unsigned long a, unsigned long b, unsigned long c);
 
+class Party;
+class Ideology;
 
 class Parliament{
     public:

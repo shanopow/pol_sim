@@ -1,6 +1,4 @@
-#include "gov_handler.hpp"
-#include "election_events.hpp"
-#include "people.hpp"
+#include "parliament.hpp"
 
 // generic rand scrambler (for seeding)
 unsigned long mix(unsigned long a, unsigned long b, unsigned long c){

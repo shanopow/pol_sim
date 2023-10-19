@@ -1,5 +1,4 @@
 #include "party.hpp"
-#include "ideology.hpp"
 
 Party::Party(std::string name, Ideology *main_ideology, int member_amount){
     this->name = name;

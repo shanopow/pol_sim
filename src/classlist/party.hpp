@@ -1,8 +1,8 @@
 #ifndef PARTY_HPP
 #define PARTY_HPP
 
-#include <string>
-#include <vector>
+#include "member.hpp"
+#include "ideology.hpp"
 #include <iostream>
 
 enum Position{
@@ -10,6 +10,9 @@ enum Position{
     coalition_partner,
     opposition,
 };
+
+class Ideology;
+class Member;
 
 class Party{
     public:
