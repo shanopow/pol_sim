@@ -3,6 +3,7 @@
 
 #include "member.hpp"
 #include "ideology.hpp"
+#include "baseclass.hpp"
 #include <iostream>
 
 enum Position{
@@ -14,7 +15,7 @@ enum Position{
 class Ideology;
 class Member;
 
-class Party{
+class Party : public Base{
     public:
     std::string name;
     std::vector<Member*> members;

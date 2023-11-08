@@ -3,10 +3,18 @@
 
 #include <unistd.h>
 #include "time.h"
+#include <Windows.h>
 
-FileReader *filer = new FileReader("../data/traits.csv");
 // main
 int main(){
+    FileReader *filer = new FileReader("../data/traits.csv");
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    
+    // We create our objects wirth a factory here
+    
+    
+    
+    
     // make ideologies
     Ideology *ideo0 =  new Ideology("Apathy", 0,0,0,0,0,0,0,0,0);
     Ideology *ideo1 =  new Ideology("Nationalism", 0,5,-2,2,5,5,-2,-3,3);
@@ -44,7 +52,9 @@ int main(){
     for(int day=0; day < 2; day++){
         parliament.show_parliament();
         if (parliament.day_till_election <= 0){
+            SetConsoleTextAttribute(hConsole, 2);
             std::cout << "Election time!" << "\n";
+            SetConsoleTextAttribute(hConsole, 15);
             parliament.hold_election(voters, ideologies);
         }
         parliament.day_till_election --;

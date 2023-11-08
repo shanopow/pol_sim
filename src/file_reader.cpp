@@ -1,5 +1,8 @@
 #include "file_reader.hpp"
 
+// our goal is to make a FileReader for each file, then we can read in all of the possible attribs. 
+// With each of these lines, we can now make an object for each line
+
 FileReader::FileReader(std::string filename){
     this->filename = filename;
 }
@@ -39,4 +42,14 @@ void FileReader::SentSplit(std::string line, char delimiter){
         delim_line.push_back(word);
     }
     this->total_lines.push_back(delim_line);
+}
+
+
+std::shared_ptr<Base> FileReader::createObject(const std::string& type) {
+   if (type == "Trait") {
+       return std::make_shared<Trait>();
+   } else if (type == "Party") {
+       return std::make_shared<Party>();
+   }
+   return nullptr;
 }

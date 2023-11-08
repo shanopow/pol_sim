@@ -6,6 +6,11 @@
 #include <sstream>
 #include <vector>
 
+#include "classlist/baseclass.hpp"
+#include "classlist/trait.hpp"
+#include "classlist/party.hpp"
+
+
 class FileReader{
     public:
 
@@ -16,6 +21,8 @@ class FileReader{
     void ReadIn();
 
     void SentSplit(std::string line, char delimiter);
+
+    std::shared_ptr<Base> createObject(const std::string& type);
 };
 
 #endif

@@ -1,0 +1,18 @@
+Ideology()
+
+Party(Ideology, Member)
+
+Trait()
+Member(Trait)
+Voter(Ideology)
+
+ElectionEvent()
+ElectionWinner()
+ElectionLoser()
+ElectionTransfer()
+AttitudeEvent()
+VoterEvent()
+
+FileReader()
+
+Parliament(Party, Voter, ElectionEvents)

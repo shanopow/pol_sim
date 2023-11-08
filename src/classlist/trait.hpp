@@ -3,10 +3,11 @@
 
 #include <string>
 #include <vector>
+#include "baseclass.hpp"
 
 void TraitMaker(std::vector<std::vector<std::string>> delim_traits);
 
-class Trait{
+class Trait : public Base {
     public:
     std::string desc;
     int magnitude;

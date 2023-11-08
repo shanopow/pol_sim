@@ -36,6 +36,7 @@ void Parliament::show_parliament(){
         std::cout << parties[i]->name;
         std::cout << " members: " << parties[i]->members.size() << " (" << parties[i]->last_result << ") " << "\n";
     }
+    std::cout << "\n";
 }
 
 struct comp {

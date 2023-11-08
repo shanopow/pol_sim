@@ -4,6 +4,7 @@
 #include "party.hpp"
 #include "voter.hpp"
 #include "election_events.hpp"
+
 #include <set>
 #include <random>
 #include <map>
